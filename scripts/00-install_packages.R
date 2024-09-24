@@ -12,3 +12,4 @@
 install.packages("tidyverse")
 install.packages("opendatatoronto")
 install.packages("arrow")
+install.packages("janitor")
