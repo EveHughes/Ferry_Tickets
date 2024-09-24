@@ -15,11 +15,11 @@ library(arrow)
 raw_ticket_data <-
   list_package_resources("toronto-island-ferry-ticket-counts") |>
   filter(name == 
-           "COVID19 cases.csv") |>
+           "Toronto Island Ferry Ticket Counts.csv") |>
   get_resource()
 
 #### Save data ####
 write_parquet(
-  x = raw_covid_data,
+  x = raw_ticket_data,
   sink = "inputs/data/raw_ticket_data.parquet"
 )
