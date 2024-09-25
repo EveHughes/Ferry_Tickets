@@ -11,22 +11,73 @@ bibliography: references.bib
 ---
 
 # Introduction
+
 Toronto Islands one of the most touristic spots in toronto, lost of visitee bla bla bla (SOURCE) runs all year round following a pre-determined scheduled. BUT operating this touristic thing is quite costly (SOURCE) both on the funds to run the actual boat itself, but also on human resources (HR humans).
 
-=> Basically, want to present TRT islands and then highlight that although it is convenient and accessible, great cost are attached to this, making it not at its most optimized way of working. 
+=\> Basically, want to present TRT islands and then highlight that although it is convenient and accessible, great cost are attached to this, making it not at its most optimized way of working.
 
 This paper explores tourist trends to optimize resource allocation and to better the Toronto Islands experience. We find that in season XYZ there are less people bla bla bla,
 
 The following paper is structured as follow: (BLA BLA BLA)
 
-# Data 
-Data collection => Where did I get this data from (open data toronto), where did they get it, what's the freq of update
+```{r}
+#| message: false
+#| echo: false
 
-Variables of interest => (Date, Number of redeemed tickets, Number of sold tickets) DEFINE what it is, how is this particular variable measured + a sample?
+#### Workspace set-up ####
+library(tidyverse)
+library(knitr)
+library(here)
+library(arrow)
+```
+
+# Data
+
+The statistical programming language R [@R] is used to clean and process the raw data. Specifically, statistical libraries such as `tidyverse` [@tidyverse], `arrow` [@arrow] and `janitor` [@janitor] were used in the data cleaning process, while libraries such as `knitr` [@knitr] and `here` [@here] were used for loading and rendering tables and graphs in this analysis.
+
+## Data collection
+
+The dataset used for this paper is titled "Toronto Island Ferry Ticket Counts" and is published by Toronto's Parks, Forestry & Recreation division. For the analysis, the dataset is retrieved from the City of Toronto Open Data Portal through the R package `opendatatoronto` [@opendatatoronto].
+
+The data collected are the aggregated data of tickets redeemed and sold at the Jack Layton Ferry Terminal, where ferry departs from the City to one of the three islands: This dataset is updated at 15 minutes interval from 6:30AM to 11:30PM, which are the earliest and latest times where the ferry departs from the city to one of the islands.
+
+The data used for this paper was retrieved on September 25 2024 at YYYPM, and was last refreshed on September 25 2024 at XYZPM.
+
+say what date spans this dataset, what subset we used + why (compleeteness)
+
+## Variables of interest
+
+```{r}
+#| message: false
+#| echo: false
+
+#### Read data ####
+clean_ferry_data <- read_parquet(here::here("outputs/data/clean_ferry_data.parquet"))
+```
+
+### Tickets Redeemed
+
+One of the variables we are interested in is the average number of tickets redeemed by per month from 2022 to 2023. Tickets to use the Toronto Islands Ferry can be bought online by using the QR code at the ferry terminal or by buying it in advance on the website. Self-serve customers are then given a bar code that can redeem their ticket in person at the ferry terminal. The number of tickets redeemed are measured by the number of bar codes scanned in-person at the ferry gate. Many stations are opened to scan the bar codes, so the total amount is compiled in the Toronto Ferry's internal system.
+
+```{r}
+#| message: false
+#| echo: false
+#| label: tbl-redeemed_ticket_data
+#| tbl-cap: First Ten Rows of the Redeemed Tickets Data
+
+# visualize the first 10 rows of the data
+clean_ferry_data |>
+  select(date, tickets_redeemed) |>
+  slice(1:10) |>
+  kable(col.names = c("Date", "Number of Tickets Redeemed")
+  )
+```
+
+### Tickets Sold
 
 # Results
-Putting it in graphs, what do I get?
-Where are there more, where are there less. SEPARATE THEM BY SEASON HERE. 
+
+Putting it in graphs, what do I get? Where are there more, where are there less. SEPARATE THEM BY SEASON HERE.
 
 (Maybe discussion?)
 
