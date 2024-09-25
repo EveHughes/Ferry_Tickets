@@ -1,0 +1,33 @@
+---
+title: "Decreasing Prevalence of COVID-19 Cases in Toronto from 2020 to 2023 Supports the Lifting of Related Regulations. "
+author: "Denise Chang"
+thanks: "Code and data supporting this analysis are available at: https://github.com/DeniseChang9/Covid-19_Cases.git "
+date: today
+date-format: long
+abstract: "In 2020 the coronavirus disease caused worldwide panic due to its fast transmission rate and the health complications for its affected host. This study aims to investigate the trends in COVID-19 cases in the City of Toronto from 2020 to 2023, as well as the severity of each of these cases. Based on the exploration of the data, there is strong evidence to support the hypothesis that the coronavirus disease is not as relevant today as it was during the peak of the pandemic suggesting the safety of lifting related regulations. The results of this study are significant, as they impact the future directions of COVID-19 regulations for businesses, schools and governmental institutions."
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+# Introduction
+Toronto Islands one of the most touristic spots in toronto, lost of visitee bla bla bla (SOURCE) runs all year round following a pre-determined scheduled. BUT operating this touristic thing is quite costly (SOURCE) both on the funds to run the actual boat itself, but also on human resources (HR humans).
+
+=> Basically, want to present TRT islands and then highlight that although it is convenient and accessible, great cost are attached to this, making it not at its most optimized way of working. 
+
+This paper explores tourist trends to optimize resource allocation and to better the Toronto Islands experience. We find that in season XYZ there are less people bla bla bla,
+
+The following paper is structured as follow: (BLA BLA BLA)
+
+# Data 
+Data collection => Where did I get this data from (open data toronto), where did they get it, what's the freq of update
+
+Variables of interest => (Date, Number of redeemed tickets, Number of sold tickets) DEFINE what it is, how is this particular variable measured + a sample?
+
+# Results
+Putting it in graphs, what do I get?
+Where are there more, where are there less. SEPARATE THEM BY SEASON HERE. 
+
+(Maybe discussion?)
+
+# References
