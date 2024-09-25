@@ -13,3 +13,7 @@ install.packages("tidyverse")
 install.packages("opendatatoronto")
 install.packages("arrow")
 install.packages("janitor")
+
+install.packages("knitr")
+install.packages("here")
+# (Above for QMD?)
