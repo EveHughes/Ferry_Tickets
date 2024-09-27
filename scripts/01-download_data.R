@@ -6,7 +6,7 @@
 # License: MIT
 # Pre-requisites: None
 
-#### Workspace setup #### 
+#### Workspace setup ####
 library(tidyverse)
 library(opendatatoronto)
 library(arrow)
@@ -14,12 +14,10 @@ library(arrow)
 #### Download data ####
 raw_ticket_data <-
   list_package_resources("toronto-island-ferry-ticket-counts") |>
-  filter(name == 
+  filter(name ==
            "Toronto Island Ferry Ticket Counts.csv") |>
   get_resource()
 
 #### Save data ####
-write_parquet(
-  x = raw_ticket_data,
-  sink = "inputs/data/raw_ticket_data.parquet"
-)
+write_parquet(x = raw_ticket_data,
+              sink = "inputs/data/raw_ticket_data.parquet")

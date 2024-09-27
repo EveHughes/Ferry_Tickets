@@ -33,6 +33,4 @@ clean_ferry_data$date |>
 n_distinct(unique(clean_ferry_data$date)) == nrow(clean_ferry_data)
 
 # check that every date in range is represented in the dataset
-n_distinct(unique(clean_ferry_data$date)) == 365*2
-
-
+n_distinct(unique(clean_ferry_data$date)) == 365 * 2

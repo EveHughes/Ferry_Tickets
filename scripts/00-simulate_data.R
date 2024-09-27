@@ -25,12 +25,17 @@ set.seed(304) #random seed
 sim_data <-
   tibble(
     date = rep(x = as.Date("2023-01-01") + c(0:364), times = 1),
-    redemption_count = sample(x = 0: 2000,
-                             size = 365,
-                             replace = TRUE),
-    sales_count = sample(x = 0:2000,
-                 size = 365,
-                 replace = TRUE))
+    redemption_count = sample(
+      x = 0:2000,
+      size = 365,
+      replace = TRUE
+    ),
+    sales_count = sample(
+      x = 0:2000,
+      size = 365,
+      replace = TRUE
+    )
+  )
 
 
 #### Data testing ####
