@@ -1,10 +1,11 @@
 ---
-title: "Decreasing Prevalence of COVID-19 Cases in Toronto from 2020 to 2023 Supports the Lifting of Related Regulations. "
+title: "Seasonality of the Toronto Islands as Mean to Fund New Ferries"
+subtitle: "An Analysis of Toronto Island Ferry Ticket Counts from 2022 to 2023 "
 author: "Denise Chang"
-thanks: "Code and data supporting this analysis are available at: https://github.com/DeniseChang9/Covid-19_Cases.git "
+thanks: "Code and data supporting this analysis are available at: https://github.com/DeniseChang9/Ferry_Tickets "
 date: today
 date-format: long
-abstract: "In 2020 the coronavirus disease caused worldwide panic due to its fast transmission rate and the health complications for its affected host. This study aims to investigate the trends in COVID-19 cases in the City of Toronto from 2020 to 2023, as well as the severity of each of these cases. Based on the exploration of the data, there is strong evidence to support the hypothesis that the coronavirus disease is not as relevant today as it was during the peak of the pandemic suggesting the safety of lifting related regulations. The results of this study are significant, as they impact the future directions of COVID-19 regulations for businesses, schools and governmental institutions."
+abstract: "The ferry service at Jack Layton Ferry terminal is the most commonly used transportation to reach the Toronto Islands. This study investigates the trends in redeemed and sold ticket counts from the terminal. Based on the exploration of the data, there is strong evidence to support the hypothesis that seasonalities play a major role in visitor's habits and tendency to visit the islands. The results of this study are significant, as they can impact the gestion of the Toronto Islands by the City of Toronto and act as support for future recommendations and suggestions related to the Islands."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -12,13 +13,11 @@ bibliography: references.bib
 
 # Introduction
 
-One of Toronto's iconic scenes is the Toronto islands located in Lake Ontario. The Toronto islands is a network of 15 smaller islands connected by pathways and bridges [@TorontoIslands]. The most convenient way to reach the Toronto Islands is by using the ferry service. Departing from the city every 15-20 minutes, the ferry runs all year round, and connects the Jack Layton Ferry terminal in downtown to three different island locations: Center Island, Hanlan's Point and Ward's Island [@TorontoIslandsFerry]. Though very convenient for ferry riders, having the ferry run year round ends up being very costly for the city and for taxpayers. From the employees' salaries to the cost of maintaining and replacing the ferries, the revenue from selling ferry tickets are not nearly enough to make up for these expenses after all. These expenses are expected to be even higher since the city has approved the purchase of two new ferries to serve the Toronto Islands for $92 million [@FerryPurchases].
+One of Toronto's iconic scenes is the Toronto islands, which are located in Lake Ontario. The Toronto Islands is a network of 15 smaller islands connected by pathways and bridges [@TorontoIslands]. The most convenient way to reach the Toronto Islands is by using the ferry service. Departing from the city every 15-20 minutes, the ferry runs all year round and connects the Jack Layton Ferry Terminal downtown to three different island locations: Center Island, Hanlan's Point and Ward's Island [@TorontoIslandsFerry]. Though very convenient for visitors, having the ferry run year-round ends up being very costly for the city and taxpayers. From the employees' salaries to the cost of maintaining and replacing the ferries, the revenue from selling ferry tickets is not nearly enough to make up for these expenses after all. These expenses are expected to be even higher since the city has approved the purchase of two new ferries to serve the Toronto Islands for $92 million [@FerryPurchases]. To make up for these climbing expenses, the city had previously leveraged the visitors' flexible demand for tickets and introduced discounted tickets for youths (ages 15-19) and seniors (ages 65 and older) for ferry tickets [@TorontoIslandsFerry]. This was a successful change and the Islands now welcome up to 1.4 million visitors annually. However, analysts and strategists are now exploring different means to lessen the burden of the ferry service's expenses. 
 
-However, on the logistic side there are a lot of ressources gone into running this service. A the terminal for example
+In this paper, I am interested in the number of tickets redeemed and sold in a day for the Toronto Island ferry service from 2022 to 2023 inclusively. Using ticket count data from Open Data Toronto, I explore trends in ticket flow to estimate the number of visitors per month for more insights into visitors' habits and needs. I find that the number of tickets sold and redeemed in the Winter months is less than the number of tickets sold and redeemed in the Summer months. The peak months are in July and August welcoming nearly 45,000 visitors combined, which is almost half of the Toronto Islands' annual visitors. 
 
-In this paper, I am interested in the trends in ferry usage to the Toronto Islands by seasonality. Using data from Open Data Toronto (SEE COVID HOW FORMUKATE), I explore (specifically diff in tickets sold and redeemd) for insights on which seasons of the year (scheduled season) is the most and least busy. 
-
-The remainder of this analysis is organized into 3 distinct sections. Section 2 discussed the data collected and the studied variables. Section 3 presents the results and findings of the exploration of the dataset with the help of visualized data. Section 4 explores further insights from the results and discusses a few weakness of this analysis. This section also briefly mentions potential next steps following this paper. 
+The remainder of this analysis is organized into 2 distinct sections. Section 2 discussed the data source and the studied variables. Section 3 presents the results and findings of the exploration of the dataset with the help of visualized data.
 
 ```{r}
 #| message: false
@@ -35,15 +34,11 @@ library(arrow)
 
 The statistical programming language R [@R] is used to clean and process the raw data. Specifically, statistical libraries such as `tidyverse` [@tidyverse], `arrow` [@arrow] and `janitor` [@janitor] were used in the data cleaning process, while libraries such as `knitr` [@knitr] and `here` [@here] were used for loading and rendering tables and graphs in this analysis.
 
-## Data collection
+## Data source
 
-The dataset used for this paper is titled "Toronto Island Ferry Ticket Counts" and is published by Toronto's Parks, Forestry & Recreation division. For the analysis, the dataset is retrieved from the City of Toronto Open Data Portal through the R package `opendatatoronto` [@opendatatoronto].
+The dataset used for this paper is titled "Toronto Island Ferry Ticket Counts" and is published by Toronto's Parks, Forestry & Recreation division. For the analysis, the dataset is retrieved from the City of Toronto Open Data Portal through the R package `opendatatoronto` [@opendatatoronto]. The data collected is the aggregated data of tickets redeemed and sold at the Jack Layton Ferry Terminal, where the ferry departs from the City to one of the three islands: This dataset is updated at 15-minutes interval from 6:3 0AM to 11:30 PM, which are the earliest and latest times where the ferry departs from the city to one of the islands.
 
-The data collected is the aggregated data of tickets redeemed and sold at the Jack Layton Ferry Terminal, where ferry departs from the City to one of the three islands: This dataset is updated at 15 minutes interval from 6:30AM to 11:30PM, which are the earliest and latest times where the ferry departs from the city to one of the islands.
-
-The data used for this paper was retrieved on September 25 2024 at YYYPM, and was last refreshed on September 25 2024 at XYZPM.
-
-say what date spans this dataset, what subset we used + why (compleeteness)
+The data used for this paper was retrieved on September 24 2024 at 10:53 AM, and was last refreshed on September 25 2024 at 10:45 AM.
 
 ## Variables of interest
 
@@ -52,16 +47,18 @@ say what date spans this dataset, what subset we used + why (compleeteness)
 #| echo: false
 
 #### Read data ####
-clean_ferry_data <- read_parquet(here::here("outputs/data/clean_ferry_data.parquet"))
+clean_ferry_data <-
+  read_parquet(here::here("outputs/data/clean_ferry_data.parquet"))
 ```
 
 ### Tickets Redeemed
 
-One of the variables we are interested in is the average number of tickets redeemed by per month from 2022 to 2023. Tickets to use the Toronto Islands Ferry can be bought online by using the QR code at the ferry terminal or by buying it in advance on the website. Self-serve customers are then given a bar code that can redeem their ticket in person at the ferry terminal. The number of tickets redeemed are measured by the number of bar codes scanned in-person at the ferry gate. Many stations are opened to scan the bar codes, so the total amount is compiled in the Toronto Ferry's internal system.
+One of the variables we are interested in is the average number of tickets redeemed by per month from 2022 to 2023. Tickets to use the Toronto Islands Ferry can be bought online by using the QR code at the ferry terminal or by buying it in advance on the website. Self-serve customers are then given a bar code that can redeem their ticket in person at the ferry terminal. The number of tickets redeemed is measured by the number of bar codes scanned in person at the ferry gate. Many stations are opened to scan the bar codes, so the total amount is compiled in the Toronto Ferry's internal system.
 
 ```{r}
 #| message: false
 #| echo: false
+#| warning: false
 #| label: tbl-redeemed_ticket_data
 #| tbl-cap: First Ten Rows of the Redeemed Tickets Data
 
@@ -69,19 +66,19 @@ One of the variables we are interested in is the average number of tickets redee
 clean_ferry_data |>
   select(date, tickets_redeemed) |>
   slice(1:10) |>
-  kable(col.names = c("Date", "Number of Tickets Redeemed")
-  )
+  kable(col.names = c("Date", "Number of Tickets Redeemed"))
 ```
 
-@tbl-redeemed_ticket_data is a sample of the ten first rows of the number of redeemed tickets per day from 2022 to 2023. Each row of this dataset represents a different date, ranging from January 1 2022 (2022-01-01) to December 31 2023 (2023-12-31). The "Date" columns adds a sense of succession to the data, allowing readers to identity trends in redeemed tickets throughout time. The "Number of Tickets Redeemed" column is the total number of tickets bought online that were redeemed on the specified date. 
+@tbl-redeemed_ticket_data is a sample of the ten first rows of the number of redeemed tickets per day from 2022 to 2023. Each row of this dataset represents a different date, ranging from January 1, 2022 (2022-01-01) to December 31, 2023 (2023-12-31). The "Date" columns adds a sense of succession to the data, allowing readers to identify trends in redeemed tickets throughout time. The "Number of Tickets Redeemed" column is the total number of tickets bought online that were redeemed on the specified date. 
 
 ### Tickets Sold
 
-Another variable we will be looking at is the number of tickets sold in-person. Customers opts to buy tickets in person at the terminal passes by a physical employee and can make their transaction through them. The employee inputs it into their own internal system and collects payment to complete the transaction. The internal system keeps track and of the number of transactions and tickets sold. The number of tickets sold is measured by the internal ferry system and through the transactions and the amount of tickets per transaction. In the raw dataset, this amount is updated at 15 minutes interval, but for the sake of this analysis, we will be looking at the amount of tickets sold per day. 
+Another variable we will be looking at is the number of tickets sold in person. Customers who opt to buy tickets in person at the terminal pass by a physical employee and can make their transactions through them. The employee inputs it into their internal system and collects payment to complete the transaction. The internal system keeps track of the number of transactions and tickets sold. The number of tickets sold is measured by the internal ferry system and through the transactions and the number of tickets per transaction. In the raw dataset, this amount is updated at 15-minutes intervals, but for the sake of this analysis, we will be looking at the amount of tickets sold per day. 
 
 ```{r}
 #| message: false
 #| echo: false
+#| warning: false
 #| label: tbl-sold_ticket_data
 #| tbl-cap: First Ten Rows of the Sold Tickets Data
 
@@ -89,19 +86,98 @@ Another variable we will be looking at is the number of tickets sold in-person. 
 clean_ferry_data |>
   select(date, tickets_sold) |>
   slice(1:10) |>
-  kable(col.names = c("Date", "Number of Tickets Sold")
-  )
+  kable(col.names = c("Date", "Number of Tickets Sold"))
 ```
 
-@tbl-sold_ticket_data shows the first 10 rows of the number tickets sold per day from 2022 to 2023. Similarly to the sample of number of tickets redeemed, each row of this sample represents a unique date from January 1 2022 and December 31 2023, making trends in sales more identifiable to readers. The "Number of Tickets Sold" column is the total number of tickets sold in person for the Toronto Island Ferry on the specified date. 
-
+@tbl-sold_ticket_data shows the first 10 rows of the number of tickets sold per day from 2022 to 2023. Similarly to the sample of number of tickets redeemed, each row of this sample represents a unique date from January 1, 2022 and December 31, 2023, making trends in sales more identifiable to readers. The "Number of Tickets Sold" column is the total number of tickets sold in person for the Toronto Island Ferry on the specified date. 
 
 # Results
 
-Putting it in graphs, what do I get? Where are there more, where are there less. SEPARATE THEM BY SEASON HERE.
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: fig-month_flow_data
+#| fig-cap: Monthly Ticket Count from 2022 to 2023
 
-(Maybe discussion?) => Seasonality... Transport not convenient, also weather?
-not manjy activities.
-Future steps that would be nice is to find a way to determine each service point's popularity and to distribute human resources better that way?
+# Find average monthly tickets redeemed and sold
+monthly_data <- clean_ferry_data |>
+  mutate(month = format(date, "%m")) |>
+  group_by(month) |>
+  summarize(
+    avg_tickets_redeemed = mean(tickets_redeemed),
+    avg_tickets_sold = mean(tickets_sold)
+  )
+
+# Reshape the data for plotting
+monthly_data_long <- monthly_data |>
+  pivot_longer(
+    cols = c(avg_tickets_redeemed, avg_tickets_sold),
+    names_to = "ticket_type",
+    values_to = "avg_tickets"
+  )
+
+# Plot using ggplot
+ggplot(monthly_data_long,
+       aes(x = month, y = avg_tickets, fill = ticket_type)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(x = "Month of the Year",
+       y = "Number of Tickets",
+       fill = "Type of Ticket Used") +
+  scale_fill_manual(
+    values = c(
+      "avg_tickets_redeemed" = "steelblue",
+      # Colors for ticket types
+      "avg_tickets_sold" = "coral"
+    ),
+    labels = c(
+      "avg_tickets_redeemed" = "Redeemed Ticket",
+      "avg_tickets_sold" = "Sold Ticket"
+    )
+  ) +
+  theme_minimal() +
+  scale_x_discrete(labels = month.abb)
+
+```
+For a more concise visual representation of the data, @fig-month_flow_data shows the average number of tickets redeemed (blue) and sold (coral) per month of the year. The total number of ferry tickets used is at its highest in the months of July (07) and August (08) with 22,390 and 21,147 tickets respectively. On the side, the number of tickets used is at its lowest in the months of January (01) and February (02) with 1,070 and 1,214 tickets redeemed or sold respectively. 
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| label: fig-pie_month_data
+#| fig-cap: Monthly Ticket Count Distribution from 2022 to 2023
+
+pie_data <-
+  clean_ferry_data |>
+  mutate(
+    total_tickets = round(tickets_sold + tickets_redeemed),
+    month = format(as.Date(date), "%b")
+  ) |>
+  group_by(month) |>
+  summarize(total_tickets_sold = sum(total_tickets))
+
+pie_data$month <-
+  factor(pie_data$month, levels = month.abb)  # month.abb contains month names in order
+
+# Create the pie chart
+ggplot(pie_data, aes(x = "", y = total_tickets_sold, fill = month)) +
+  geom_bar(
+    stat = "identity",
+    width = 1,
+    colour = "white",
+    size = 0.5
+  ) +  # Create bar for each month
+  coord_polar("y") +  # Transform the bar chart into a pie chart
+  labs(fill = "Month") +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks = element_blank(),
+    axis.title.x = element_blank(),
+    axis.title.y = element_blank()
+  )  
+```
+@fig-pie_month_data shows a distribution of the average amount of tickets redeemed or sold per month relative to the total amount of tickets redeemed and sold annually. From this pie chart, it is easy to see that the busiest months, July and August, make up nearly half of the total amount of annual visitors. These results are consistent with the results from the histogram from the previous subsection. 
 
 # References
