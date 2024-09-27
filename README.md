@@ -1,5 +1,3 @@
-# Toronto_Islands_Ticket
-
 # Analysis of Ferry Ticket Trends to the Toronto Islands
 
 ## Overview
