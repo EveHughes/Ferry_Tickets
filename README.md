@@ -13,4 +13,6 @@ The repository is structured as follow:
 
 ## LLM Usage
 
-The following LLM were consulted for this paper: - `Google Translate` was used to translate specific words from French to English and to be included in the paper. - `Grammarly` was used to proofread the text for any vocabulary or grammar issues.
+The following LLM were consulted for this paper: 
+- `Google Translate` was used to translate specific words from French to English and to be included in the paper.
+- `Grammarly` was used to proofread the text for any vocabulary or grammar issues.
