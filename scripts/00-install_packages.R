@@ -7,13 +7,11 @@
 # Pre-requisites: None
 
 #### Install Packages ####
-# Below are all the packages that are necessary to run the files in this repository. 
 
+# Below are all the packages that are necessary to run the files in this repository. 
 install.packages("tidyverse")
 install.packages("opendatatoronto")
 install.packages("arrow")
 install.packages("janitor")
-
 install.packages("knitr")
 install.packages("here")
-# (Above for QMD?)
