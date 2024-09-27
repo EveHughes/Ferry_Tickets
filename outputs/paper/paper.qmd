@@ -12,13 +12,12 @@ bibliography: references.bib
 
 # Introduction
 
-Toronto Islands one of the most touristic spots in toronto, lost of visitee bla bla bla (SOURCE) runs all year round following a pre-determined scheduled. BUT operating this touristic thing is quite costly (SOURCE) both on the funds to run the actual boat itself, but also on human resources (HR humans).
+One of Toronto's iconic scenes is the Toronto islands located in Lake Ontario. The Toronto islands is a network of 15 smaller islands connected by pathways and bridges. 
+(the main way is use the ferry (also a fan favourite) since it is both cheapers, convenient and runs all year round.) EXPLAIN FERRY (which terminal is departs from in dt and what are the three different) However, on the logistic side there are a lot of ressources gone into running this service. A the terminal for example
 
-=\> Basically, want to present TRT islands and then highlight that although it is convenient and accessible, great cost are attached to this, making it not at its most optimized way of working.
+In this paper, I am interested in the trends in ferry usage to the Toronto Islands by seasonality. Using data from Open Data Toronto (SEE COVID HOW FORMUKATE), I explore (specifically diff in tickets sold and redeemd) for insights on which seasons of the year (scheduled season) is the most and least busy. 
 
-This paper explores tourist trends to optimize resource allocation and to better the Toronto Islands experience. We find that in season XYZ there are less people bla bla bla,
-
-The following paper is structured as follow: (BLA BLA BLA)
+The remainder of this analysis is organized into 3 distinct sections. Section 2 discussed the data collected and the studied variables. Section 3 presents the results and findings of the exploration of the dataset with the help of visualized data. Section 4 explores further insights from the results and discusses a few weakness of this analysis. This section also briefly mentions potential next steps following this paper. 
 
 ```{r}
 #| message: false
@@ -39,7 +38,7 @@ The statistical programming language R [@R] is used to clean and process the raw
 
 The dataset used for this paper is titled "Toronto Island Ferry Ticket Counts" and is published by Toronto's Parks, Forestry & Recreation division. For the analysis, the dataset is retrieved from the City of Toronto Open Data Portal through the R package `opendatatoronto` [@opendatatoronto].
 
-The data collected are the aggregated data of tickets redeemed and sold at the Jack Layton Ferry Terminal, where ferry departs from the City to one of the three islands: This dataset is updated at 15 minutes interval from 6:30AM to 11:30PM, which are the earliest and latest times where the ferry departs from the city to one of the islands.
+The data collected is the aggregated data of tickets redeemed and sold at the Jack Layton Ferry Terminal, where ferry departs from the City to one of the three islands: This dataset is updated at 15 minutes interval from 6:30AM to 11:30PM, which are the earliest and latest times where the ferry departs from the city to one of the islands.
 
 The data used for this paper was retrieved on September 25 2024 at YYYPM, and was last refreshed on September 25 2024 at XYZPM.
 
@@ -73,12 +72,34 @@ clean_ferry_data |>
   )
 ```
 
+@tbl-redeemed_ticket_data is a sample of the ten first rows of the number of redeemed tickets per day from 2022 to 2023. Each row of this dataset represents a different date, ranging from January 1 2022 (2022-01-01) to December 31 2023 (2023-12-31). The "Date" columns adds a sense of succession to the data, allowing readers to identity trends in redeemed tickets throughout time. The "Number of Tickets Redeemed" column is the total number of tickets bought online that were redeemed on the specified date. 
+
 ### Tickets Sold
+
+Another variable we will be looking at is the number of tickets sold in-person. Customers opts to buy tickets in person at the terminal passes by a physical employee and can make their transaction through them. The employee inputs it into their own internal system and collects payment to complete the transaction. The internal system keeps track and of the number of transactions and tickets sold. The number of tickets sold is measured by the internal ferry system and through the transactions and the amount of tickets per transaction. In the raw dataset, this amount is updated at 15 minutes interval, but for the sake of this analysis, we will be looking at the amount of tickets sold per day. 
+
+```{r}
+#| message: false
+#| echo: false
+#| label: tbl-sold_ticket_data
+#| tbl-cap: First Ten Rows of the Sold Tickets Data
+
+# visualize the first 10 rows of the data
+clean_ferry_data |>
+  select(date, tickets_sold) |>
+  slice(1:10) |>
+  kable(col.names = c("Date", "Number of Tickets Sold")
+  )
+```
+
+@tbl-sold_ticket_data shows the first 10 rows of the number tickets sold per day from 2022 to 2023. Similarly to the sample of number of tickets redeemed, each row of this sample represents a unique date from January 1 2022 and December 31 2023, making trends in sales more identifiable to readers. The "Number of Tickets Sold" column is the total number of tickets sold in person for the Toronto Island Ferry on the specified date. 
+
 
 # Results
 
 Putting it in graphs, what do I get? Where are there more, where are there less. SEPARATE THEM BY SEASON HERE.
 
-(Maybe discussion?)
+(Maybe discussion?) => Seasonality... Transport not convenient, also weather?
+not manjy activities.
 
 # References
