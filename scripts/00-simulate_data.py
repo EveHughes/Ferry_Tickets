@@ -13,42 +13,31 @@
 # Columns: date, redemption_count, sales_count
 
 #### Workspace setup ####
-library(tidyverse)
+import pandas as pd
+import numpy as np
 
 #### Start simulation ####
 
 ## Create simulated data
 
-set.seed(304) #random seed
+np.random.seed(304)  # random seed
 
 # simulate data for 1 year (365 days)
-sim_data <-
-  tibble(
-    date = rep(x = as.Date("2023-01-01") + c(0:364), times = 1),
-    redemption_count = sample(
-      x = 0:2000,
-      size = 365,
-      replace = TRUE
-    ),
-    sales_count = sample(
-      x = 0:2000,
-      size = 365,
-      replace = TRUE
-    )
-  )
-
+sim_data = pd.DataFrame({
+    "date": pd.date_range(start="2023-01-01", periods=365, freq='D'),
+    "redemption_count": np.random.randint(0, 2001, size=365),
+    "sales_count": np.random.randint(0, 2001, size=365)
+})
 
 #### Data testing ####
 
 # check that redemption_count is greater or equal to 0
-all(sim_data$redemption_count >= 0)
+print((sim_data["redemption_count"] >= 0).all())
 
 # check that sales_count is greater or equal to 0
-all(sim_data$sales_count >= 0)
+print((sim_data["sales_count"] >= 0).all())
 
 # check the date range
-sim_data$date |>
-  min() == "2023-01-01"
+print(sim_data["date"].min() == pd.to_datetime("2023-01-01"))
 
-sim_data$date |>
-  max() == "2023-12-31"
+print(sim_data["date"].max() == pd.to_datetime("2023-12-31"))

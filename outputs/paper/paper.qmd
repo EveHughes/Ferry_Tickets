@@ -19,15 +19,14 @@ In this paper, I am interested in the number of tickets redeemed and sold in a d
 
 The remainder of this analysis is organized into 2 distinct sections. Section 2 discussed the data source and the studied variables. Section 3 presents the results and findings of the exploration of the dataset with the help of visualized data.
 
-```{r}
+```{python}
 #| message: false
 #| echo: false
 
 #### Workspace set-up ####
-library(tidyverse)
-library(knitr)
-library(here)
-library(arrow)
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
 ```
 
 # Data
@@ -42,20 +41,19 @@ The data used for this paper was retrieved on September 24 2024 at 10:53 AM, and
 
 ## Variables of interest
 
-```{r}
+```{python}
 #| message: false
 #| echo: false
 
 #### Read data ####
-clean_ferry_data <-
-  read_parquet(here::here("outputs/data/clean_ferry_data.parquet"))
+clean_ferry_data = pd.read_csv("../data/clean_ferry_data.csv")
 ```
 
 ### Tickets Redeemed
 
 One of the variables we are interested in is the average number of tickets redeemed by per month from 2022 to 2023. Tickets to use the Toronto Islands Ferry can be bought online by using the QR code at the ferry terminal or by buying it in advance on the website. Self-serve customers are then given a bar code that can redeem their ticket in person at the ferry terminal. The number of tickets redeemed is measured by the number of bar codes scanned in person at the ferry gate. Many stations are opened to scan the bar codes, so the total amount is compiled in the Toronto Ferry's internal system.
 
-```{r}
+```{python}
 #| message: false
 #| echo: false
 #| warning: false
@@ -63,10 +61,9 @@ One of the variables we are interested in is the average number of tickets redee
 #| tbl-cap: First Ten Rows of the Redeemed Tickets Data
 
 # visualize the first 10 rows of the data
-clean_ferry_data |>
-  select(date, tickets_redeemed) |>
-  slice(1:10) |>
-  kable(col.names = c("Date", "Number of Tickets Redeemed"))
+sample_table = clean_ferry_data.loc[:, ["date", "tickets_redeemed"]].iloc[:10]
+sample_table.columns = ["Date", "Number of Tickets Redeemed"]
+sample_table
 ```
 
 @tbl-redeemed_ticket_data is a sample of the ten first rows of the number of redeemed tickets per day from 2022 to 2023. Each row of this dataset represents a different date, ranging from January 1, 2022 (2022-01-01) to December 31, 2023 (2023-12-31). The "Date" columns adds a sense of succession to the data, allowing readers to identify trends in redeemed tickets throughout time. The "Number of Tickets Redeemed" column is the total number of tickets bought online that were redeemed on the specified date. 
@@ -75,7 +72,7 @@ clean_ferry_data |>
 
 Another variable we will be looking at is the number of tickets sold in person. Customers who opt to buy tickets in person at the terminal pass by a physical employee and can make their transactions through them. The employee inputs it into their internal system and collects payment to complete the transaction. The internal system keeps track of the number of transactions and tickets sold. The number of tickets sold is measured by the internal ferry system and through the transactions and the number of tickets per transaction. In the raw dataset, this amount is updated at 15-minutes intervals, but for the sake of this analysis, we will be looking at the amount of tickets sold per day. 
 
-```{r}
+```{python}
 #| message: false
 #| echo: false
 #| warning: false
@@ -83,100 +80,129 @@ Another variable we will be looking at is the number of tickets sold in person. 
 #| tbl-cap: First Ten Rows of the Sold Tickets Data
 
 # visualize the first 10 rows of the data
-clean_ferry_data |>
-  select(date, tickets_sold) |>
-  slice(1:10) |>
-  kable(col.names = c("Date", "Number of Tickets Sold"))
+sample_table = clean_ferry_data.loc[:, ["date", "tickets_sold"]].iloc[:10]
+sample_table.columns = ["Date", "Number of Tickets Sold"]
+sample_table
 ```
 
 @tbl-sold_ticket_data shows the first 10 rows of the number of tickets sold per day from 2022 to 2023. Similarly to the sample of number of tickets redeemed, each row of this sample represents a unique date from January 1, 2022 and December 31, 2023, making trends in sales more identifiable to readers. The "Number of Tickets Sold" column is the total number of tickets sold in person for the Toronto Island Ferry on the specified date. 
 
 # Results
 
-```{r}
+```{python}
 #| echo: false
 #| message: false
 #| warning: false
 #| label: fig-month_flow_data
 #| fig-cap: Monthly Ticket Count from 2022 to 2023
 
-# Find average monthly tickets redeemed and sold
-monthly_data <- clean_ferry_data |>
-  mutate(month = format(date, "%m")) |>
-  group_by(month) |>
-  summarize(
-    avg_tickets_redeemed = mean(tickets_redeemed),
-    avg_tickets_sold = mean(tickets_sold)
-  )
+# Extract month as zero-padded string (e.g., "01", "02", ..., "12")
+clean_ferry_data["month"] = pd.to_datetime(clean_ferry_data["date"]).dt.strftime("%m")
 
-# Reshape the data for plotting
-monthly_data_long <- monthly_data |>
-  pivot_longer(
-    cols = c(avg_tickets_redeemed, avg_tickets_sold),
-    names_to = "ticket_type",
-    values_to = "avg_tickets"
-  )
+# Group by month and calculate average tickets redeemed and sold
+monthly_data = clean_ferry_data.groupby("month").agg(
+    avg_tickets_redeemed=("tickets_redeemed", "mean"),
+    avg_tickets_sold=("tickets_sold", "mean")
+)
 
-# Plot using ggplot
-ggplot(monthly_data_long,
-       aes(x = month, y = avg_tickets, fill = ticket_type)) +
-  geom_bar(stat = "identity", position = "stack") +
-  labs(x = "Month of the Year",
-       y = "Number of Tickets",
-       fill = "Type of Ticket Used") +
-  scale_fill_manual(
-    values = c(
-      "avg_tickets_redeemed" = "steelblue",
-      # Colors for ticket types
-      "avg_tickets_sold" = "coral"
-    ),
-    labels = c(
-      "avg_tickets_redeemed" = "Redeemed Ticket",
-      "avg_tickets_sold" = "Sold Ticket"
-    )
-  ) +
-  theme_minimal() +
-  scale_x_discrete(labels = month.abb)
+# Reindex to ensure all 12 months are present
+all_months = [f"{i:02d}" for i in range(1, 13)]
+monthly_data = monthly_data.reindex(all_months, fill_value=0)
+
+# Plot stacked bar chart
+fig, ax = plt.subplots(figsize=(10, 6))
+
+month_labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+                'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+color_map = {
+    "avg_tickets_redeemed": "steelblue",
+    "avg_tickets_sold": "coral"
+}
+
+label_map = {
+    "avg_tickets_redeemed": "Redeemed Ticket",
+    "avg_tickets_sold": "Sold Ticket"
+}
+
+bottom = np.zeros(len(monthly_data))
+
+for ticket_type in ['avg_tickets_redeemed', 'avg_tickets_sold']:
+    ax.bar(month_labels, monthly_data[ticket_type].values, bottom=bottom,
+           color=color_map[ticket_type], label=label_map[ticket_type])
+    bottom += monthly_data[ticket_type].values
+
+ax.set_xlabel('Month of the Year')
+ax.set_ylabel('Number of Tickets')
+ax.legend(title='Type of Ticket Used')
+ax.set_title('Average Monthly Tickets Redeemed and Sold')
+plt.xticks(rotation=0)
+plt.tight_layout()
+plt.show()
 
 ```
 For a more concise visual representation of the data, @fig-month_flow_data shows the average number of tickets redeemed (blue) and sold (coral) per month of the year. The total number of ferry tickets used is at its highest in the months of July (07) and August (08) with 22,390 and 21,147 tickets respectively. On the side, the number of tickets used is at its lowest in the months of January (01) and February (02) with 1,070 and 1,214 tickets redeemed or sold respectively. 
 
-```{r}
+```{python}
 #| echo: false
 #| message: false
 #| warning: false
 #| label: fig-pie_month_data
 #| fig-cap: Monthly Ticket Count Distribution from 2022 to 2023
 
-pie_data <-
-  clean_ferry_data |>
-  mutate(
-    total_tickets = round(tickets_sold + tickets_redeemed),
-    month = format(as.Date(date), "%b")
-  ) |>
-  group_by(month) |>
-  summarize(total_tickets_sold = sum(total_tickets))
 
-pie_data$month <-
-  factor(pie_data$month, levels = month.abb)  # month.abb contains month names in order
+# Prepare data: compute total tickets and extract month abbreviation
+pie_data = clean_ferry_data.copy()
+pie_data["month"] = pd.to_datetime(pie_data["date"]).dt.strftime("%b")
+pie_data["total_tickets"] = (pie_data["tickets_sold"] + pie_data["tickets_redeemed"]).round()
 
-# Create the pie chart
-ggplot(pie_data, aes(x = "", y = total_tickets_sold, fill = month)) +
-  geom_bar(
-    stat = "identity",
-    width = 1,
-    colour = "white",
-    size = 0.5
-  ) +  # Create bar for each month
-  coord_polar("y") +  # Transform the bar chart into a pie chart
-  labs(fill = "Month") +
-  theme_minimal() +
-  theme(
-    axis.text.x = element_blank(),
-    axis.ticks = element_blank(),
-    axis.title.x = element_blank(),
-    axis.title.y = element_blank()
-  )  
+# Group by month
+pie_data = pie_data.groupby("month", as_index=False)["total_tickets"].sum()
+
+# Reorder months by standard month abbreviation order
+month_order = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+               "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+pie_data["month"] = pd.Categorical(pie_data["month"], categories=month_order, ordered=True)
+pie_data = pie_data.sort_values("month")
+
+# Set the exact color map you showed in your pie chart image
+colors = [
+    "#F77D8E",  # Jan
+    "#C88E04",  # Feb
+    "#9F9D04",  # Mar
+    "#2C9C26",  # Apr
+    "#03B75F",  # May
+    "#00CFCF",  # Jun
+    "#00DFFF",  # Jul
+    "#3498DB",  # Aug
+    "#A682F1",  # Sep
+    "#E271F4",  # Oct
+    "#FF6FCB",  # Nov
+    "#FF6EB7"   # Dec
+]
+
+# Plot the pie chart
+fig, ax = plt.subplots(figsize=(4, 4))  # smaller figure size
+ax.pie(
+    pie_data["total_tickets"],
+    labels=pie_data["month"],
+    colors=colors,
+    startangle=90,
+    counterclock=False,
+    radius=0.6,
+    wedgeprops={"edgecolor": "white", "linewidth": 1}
+)
+
+# Add legend outside the chart
+ax.legend(
+    pie_data["month"],
+    title="Month",
+    bbox_to_anchor=(1.1, 0.5),
+    loc="center left"
+)
+
+plt.tight_layout()
+plt.show()
 ```
 @fig-pie_month_data shows a distribution of the average amount of tickets redeemed or sold per month relative to the total amount of tickets redeemed and sold annually. From this pie chart, it is easy to see that the busiest months, July and August, make up nearly half of the total amount of annual visitors. These results are consistent with the results from the histogram from the previous subsection. 
 
